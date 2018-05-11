@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  mariadb:
+    image: 'mariadb'
+    volumes:
+      - ./mysql-cfg:/etc/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+  phabricator:
+    image: redpointgames/phabricator
+    depends_on:
+      - mariadb
+    ports:
+      - '1180:80'
+      - '11443:443'
+    volumes:
+      - ./repos:/repos
+    environment:
+      - MYSQL_HOST=mariadb
+      - MYSQL_USER=root
+      - MYSQL_PASS=example
+      - PHABRICATOR_REPOSITORY_PATH=/repos
+      - PHABRICATOR_HOST=anfa.sml:1180
